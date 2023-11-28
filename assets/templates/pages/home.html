@@ -1,0 +1,231 @@
+{{define "page:title"}}ESP32 SPIFFS Burner{{end}}
+
+{{define "page:main"}}
+<div class="container py-4">
+    <header class="pb-3 mb-4 border-bottom">
+        <a href="/" class="d-flex align-items-center text-body-emphasis text-decoration-none">
+            <span class="fs-4"></span>
+        </a>
+    </header>
+
+    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">ESP32 SPIFFS Burner</h1>
+            <p class="col-md-8 fs-4">With this tool, you can effortlessly generate an image of your locally stored
+                files and seamlessly transfer them to the SPIFFS (SPI Flash File System) on the ESP32
+                microcontroller.</p>
+        </div>
+    </div>
+
+    <form class="card p-2" method="POST" action="/">
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <h5 class="card-title">mkspiffs settings</h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-12">
+                        <label for="SourceDirectory" class="form-label">Source directory</label>
+                        {{with .Form.Validator.FieldErrors.SourceDirectory}}
+                        <span class="text-danger">*{{.}}</span>
+                        {{end}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="SourceDirectory" placeholder=""
+                                   value="{{.Form.SourceDirectory}}" name="SourceDirectory">
+                            <span class="input-group-text" id="inputExplanationIcon" data-bs-toggle="popover"
+                                  data-bs-placement="right"
+                                  data-bs-content="Specifies the source directory containing the files to be included in the SPIFFS image. Possible Values: Path to a directory">
+                                      <i class="fas fa-info-circle"></i>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-12">
+                        <label for="OutputDirectory" class="form-label">Output directory</label>
+                        {{with .Form.Validator.FieldErrors.OutputDirectory}}
+                        <span class="text-danger">*{{.}}</span>
+                        {{end}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="OutputDirectory" placeholder=""
+                                   value="{{.Form.OutputDirectory}}" name="OutputDirectory">
+                            <span class="input-group-text" id="outputExplanationIcon" data-bs-toggle="popover"
+                                  data-bs-placement="right"
+                                  data-bs-content="Specifies the source directory containing the files to be included in the SPIFFS image. Possible Values: Path to a directory">
+                                      <i class="fas fa-info-circle"></i>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label for="PageSize" class="form-label">Page size</label>
+                        {{with .Form.Validator.FieldErrors.PageSize}}
+                        <span class="text-danger">*{{.}}</span>
+                        {{end}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="PageSize" value="256" name="PageSize"
+                                   readonly>
+                            <span class="input-group-text" id="pageSizeExplanationIcon" data-bs-toggle="popover"
+                                  data-bs-placement="right"
+                                  data-bs-content="This value represents the minimum unit of data that can be written to or read from the SPIFFS. Possible Values: 256.">
+                                      <i class="fas fa-info-circle"></i>
+                                </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="BlockSize" class="form-label">Block size</label>
+                        {{with .Form.Validator.FieldErrors.BlockSize}}
+                        <span class="text-danger">*{{.}}</span>
+                        {{end}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="BlockSize" value="4096" name="BlockSize"
+                                   readonly>
+                            <span class="input-group-text" id="blockSizeExplanationIcon" data-bs-toggle="popover"
+                                  data-bs-placement="right"
+                                  data-bs-content="This value represents the minimum unit of data that can be erased in the SPIFFS. Possible Values: 4096.">
+                                      <i class="fas fa-info-circle"></i>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label for="PartitionSize" class="form-label">Partition Size [Bytes]</label>
+                        {{with .Form.Validator.FieldErrors.PartitionSize}}
+                        <span class="text-danger">*{{.}}</span>
+                        {{end}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="PartitionSize" placeholder=""
+                                   value="{{.Form.PartitionSize}}" name="PartitionSize">
+                            <span class="input-group-text" id="partitionSizeExplanationIcon"
+                                  data-bs-toggle="popover"
+                                  data-bs-placement="right"
+                                  data-bs-content="This value represents the size of the SPIFFS partition in bytes (can be obtained from a partition table). For more information, visit the ESP32FlashPartitionsExplorer on GitHub">
+                                      <i class="fas fa-info-circle"></i>
+                                </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="ImageName" class="form-label"><I></I>Image name</label>
+                        {{with .Form.Validator.FieldErrors.ImageName}}
+                        <span class="text-danger">*{{.}}</span>
+                        {{end}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="ImageName" placeholder=""
+                                   value="{{.Form.ImageName}}" name="ImageName">
+                            <span class="input-group-text" id="imageNameExplanationIcon" data-bs-toggle="popover"
+                                  data-bs-placement="right"
+                                  data-bs-content="This value specifies the output file name for the generated SPIFFS image. For example: image.bin">
+                                      <i class="fas fa-info-circle"></i>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h5 class="card-title">esptool settings</h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label for="TargetChip" class="form-label">Target chip</label>
+                        {{with .Form.Validator.FieldErrors.TargetChip}}
+                        <span class="text-danger">*{{.}}</span>
+                        {{end}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="TargetChip" value="esp32" name="TargetChip"
+                                   readonly>
+                            <span class="input-group-text" id="targetChipExplanationIcon" data-bs-toggle="popover"
+                                  data-bs-placement="right"
+                                  data-bs-content="This value specifies the target chip, which is the ESP32 in this case.">
+                                      <i class="fas fa-info-circle"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="SerialPort" class="form-label"><I></I>Serial port</label>
+                        {{with .Form.Validator.FieldErrors.SerialPort}}
+                        <span class="text-danger">*{{.}}</span>
+                        {{end}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="SerialPort" value="{{.Form.SerialPort}}"
+                                   name="SerialPort">
+                            <span class="input-group-text" id="serialPortExplanationIcon" data-bs-toggle="popover"
+                                  data-bs-placement="right"
+                                  data-bs-content="This value specifies the communication port to which the ESP32 is connected (e.g., COM1 on Windows or /dev/ttyUSB0 on Linux).">
+                                      <i class="fas fa-info-circle"></i>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label for="BaudRate" class="form-label">Baud rate</label>
+                        {{with .Form.Validator.FieldErrors.BaudRate}}
+                        <span class="text-danger">*{{.}}</span>
+                        {{end}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="BaudRate" value="460800" name="BaudRate"
+                                   readonly>
+                            <span class="input-group-text" id="baudRateExplanationIcon" data-bs-toggle="popover"
+                                  data-bs-placement="right"
+                                  data-bs-content="This value sets the baud rate for communication between the computer and the ESP32. In this case, it's set to 460800 bits per second.">
+                                      <i class="fas fa-info-circle"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="FlashMode" class="form-label"><I></I>Flash mode</label>
+                        {{with .Form.Validator.FieldErrors.FlashMode}}
+                        <span class="text-danger">*{{.}}</span>
+                        {{end}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="FlashMode" value="dio" name="FlashMode"
+                                   readonly>
+                            <span class="input-group-text" id="flashModeExplanationIcon" data-bs-toggle="popover"
+                                  data-bs-placement="right"
+                                  data-bs-content="This value specifies the mode in which data is transferred between the ESP32 and the flash memory.">
+                                      <i class="fas fa-info-circle"></i>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label for="FlashFrequency" class="form-label">Flash frequency [MHz]</label>
+                        {{with .Form.Validator.FieldErrors.FlashFrequency}}
+                        <span class="text-danger">*{{.}}</span>
+                        {{end}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="FlashFrequency" value="{{.Form.FlashFrequency}}"
+                                   name="FlashFrequency" placeholder="e.g. 40">
+                            <span class="input-group-text" id="flashFrequencyExplanationIcon" data-bs-toggle="popover"
+                                  data-bs-placement="right"
+                                  data-bs-content="This value specifies the data transfer speed between the ESP32 and flash memory in MHz.">
+                                      <i class="fas fa-info-circle"></i>
+                                </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="Offset" class="form-label"><I></I>Offset [HEX]</label>
+                        {{with .Form.Validator.FieldErrors.Offset}}
+                        <span class="text-danger">*{{.}}</span>
+                        {{end}}
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="Offset" value="{{.Form.Offset}}"
+                                   name="Offset" placeholder="e.g. 0x290000">
+                            <span class="input-group-text" id="offsetExplanationIcon" data-bs-toggle="popover"
+                                  data-bs-placement="right"
+                                  data-bs-content="This value represents the starting address of the SPIFFS partition in hexadecimal, which can be obtained from the partition table. For more details, refer to ESP32FlashPartitionsExplorer on GitHub.">
+                                      <i class="fas fa-info-circle"></i>
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-12 d-flex justify-content-center align-items-center">
+                <button type="submit" class="btn btn-dark btn-lg">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+{{end}}

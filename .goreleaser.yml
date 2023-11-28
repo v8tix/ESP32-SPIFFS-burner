@@ -1,0 +1,13 @@
+builds:
+  - binary: esp32-burner
+    goos:
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm
+      - arm64
+    main: ./cmd/web/main.go
+
+release:
+  name_template: "esp32-burner-{{.Tag}}"

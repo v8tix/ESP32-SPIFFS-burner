@@ -1,0 +1,26 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.21
+
+      - name: Run goreleaser
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: |
+          go install github.com/goreleaser/goreleaser@latest
+          goreleaser release --clean
