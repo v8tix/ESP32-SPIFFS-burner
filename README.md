@@ -10,7 +10,7 @@ Before using this tool, make sure you have the following:
 
 - [mkspiffs](https://github.com/igrr/mkspiffs/releases): Needed for creating SPIFFS images.
 - [esptool](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html#get-started-step-by-step): Required for flashing firmware to the ESP32.
-- [esp32-burner](https://github.com/v8tix/ESP32-SPIFFS-burner/releases/): Utility that streamlines the image flashing process. 
+- [esp32-burner](https://github.com/v8tix/ESP32-SPIFFS-burner/releases/): Utility that streamlines the image flashing process. K
 
 **NOTE:** Ensure that they are included in your system's PATH.
 
